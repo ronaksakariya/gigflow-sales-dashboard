@@ -17,7 +17,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   const user = await User.create(validated);
 
   const payload: JwtPayload = {
-    userId: (user._id as any).toString(),
+    userId: user._id.toString(),
     role: user.role,
   };
 
@@ -25,7 +25,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   setTokenCookie(res, token);
 
   sendSuccess(res, 201, 'User registered successfully', {
-    id: (user._id as any).toString(),
+    id: user._id.toString(),
     name: user.name,
     email: user.email,
     role: user.role,
@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 
   const payload: JwtPayload = {
-    userId: (user._id as any).toString(),
+    userId: user._id.toString(),
     role: user.role,
   };
 
@@ -56,7 +56,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   setTokenCookie(res, token);
 
   sendSuccess(res, 200, 'Logged in successfully', {
-    id: (user._id as any).toString(),
+    id: user._id.toString(),
     name: user.name,
     email: user.email,
     role: user.role,
@@ -76,7 +76,7 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
   }
 
   sendSuccess(res, 200, 'User fetched successfully', {
-    id: (user._id as any).toString(),
+    id: user._id.toString(),
     name: user.name,
     email: user.email,
     role: user.role,

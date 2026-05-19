@@ -39,7 +39,7 @@ const leadSchema = new Schema<ILeadDocument>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'CreatedBy is required'],
-    } as any,
+    },
   },
   { timestamps: true }
 );

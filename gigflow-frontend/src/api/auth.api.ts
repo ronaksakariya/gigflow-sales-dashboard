@@ -1,12 +1,10 @@
 import type { ApiResponse, User } from '@/types'
-import type { Role } from '@/types'
 import axiosInstance from '@/api/axios'
 
 export async function register(data: {
   name: string
   email: string
   password: string
-  role?: Role
 }): Promise<ApiResponse<User>> {
   const response = await axiosInstance.post<ApiResponse<User>>(
     '/auth/register',

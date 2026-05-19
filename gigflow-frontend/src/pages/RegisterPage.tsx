@@ -15,23 +15,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { useAuth } from "@/hooks/useAuth"
 import { toast } from "sonner"
 import axios from "axios"
-import type { Role } from "@/types"
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["admin", "sales"]),
 })
 
 const BRAND_BG_PATTERN =
@@ -50,27 +41,15 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      role: "sales",
-    },
   })
-
-  const currentRole = watch("role")
 
   const onSubmit = async (data: RegisterFormData) => {
     setError(null)
     try {
-      await registerUser(
-        data.name,
-        data.email,
-        data.password,
-        data.role as Role
-      )
+      await registerUser(data.name, data.email, data.password)
       toast.success("Account created successfully!")
       navigate("/dashboard")
     } catch (err: unknown) {
@@ -184,32 +163,6 @@ export default function RegisterPage() {
                   {errors.password && (
                     <p className="text-sm text-destructive">
                       {errors.password.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-medium">Role</Label>
-                  <Select
-                    value={currentRole}
-                    onValueChange={(val) =>
-                      setValue("role", val as RegisterFormData["role"], {
-                        shouldValidate: true,
-                      })
-                    }
-                  >
-                    <SelectTrigger className="h-11 bg-slate-50 dark:bg-slate-800/50">
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sales">
-                        Sales Representative
-                      </SelectItem>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.role && (
-                    <p className="text-sm text-destructive">
-                      {errors.role.message}
                     </p>
                   )}
                 </div>

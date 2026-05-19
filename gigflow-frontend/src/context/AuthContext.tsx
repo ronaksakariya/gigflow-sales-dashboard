@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
-import type { User, Role } from '@/types'
+import type { User } from '@/types'
 import * as authApi from '@/api/auth.api'
 
 interface AuthContextValue {
@@ -8,7 +8,7 @@ interface AuthContextValue {
   isLoading: boolean
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
-  register: (name: string, email: string, password: string, role?: Role) => Promise<void>
+  register: (name: string, email: string, password: string) => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -38,8 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const register = useCallback(
-    async (name: string, email: string, password: string, role?: Role) => {
-      const res = await authApi.register({ name, email, password, role })
+    async (name: string, email: string, password: string) => {
+      const res = await authApi.register({ name, email, password })
       if (res.data) setUser(res.data)
     },
     [],

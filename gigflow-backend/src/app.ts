@@ -4,6 +4,7 @@ import cors from 'cors';
 import { CLIENT_ORIGIN } from './config/env';
 import authRoutes from './routes/auth.routes';
 import leadRoutes from './routes/lead.routes';
+import userRoutes from './routes/user.routes';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
+app.use('/api/users', userRoutes);
 
 app.use('*', (_req, res) => {
   res.status(404).json({

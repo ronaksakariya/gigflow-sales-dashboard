@@ -14,7 +14,11 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const user = await User.create(validated);
+  const user = await User.create({
+    name: validated.name,
+    email: validated.email,
+    password: validated.password,
+  });
 
   const payload: JwtPayload = {
     userId: user._id.toString(),

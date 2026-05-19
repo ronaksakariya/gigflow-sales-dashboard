@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
-import { Zap, LogOut, Sun, Moon } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { Zap, LogOut, Sun, Moon, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme } from '@/components/theme-provider'
@@ -47,6 +47,14 @@ export default function Navbar() {
           <span className="font-bold text-lg tracking-tight">GigFlow</span>
         </div>
         <div className="flex items-center gap-3">
+          {user?.role === 'admin' && (
+            <Button variant="ghost" size="sm" asChild className="hidden sm:flex gap-1.5">
+              <Link to="/users">
+                <Users className="size-4" />
+                Users
+              </Link>
+            </Button>
+          )}
           <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full">
             {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </Button>

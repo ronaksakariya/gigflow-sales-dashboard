@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -61,14 +62,17 @@ export default function LeadForm({ lead, onSuccess, onCancel }: LeadFormProps) {
     try {
       if (lead) {
         await updateLead(lead._id, data)
+        toast.success('Lead updated successfully')
       } else {
         await createLead(data)
+        toast.success('Lead created successfully')
       }
       onSuccess()
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Something went wrong'
       setFormError(message)
+      toast.error(message)
     }
   }
 

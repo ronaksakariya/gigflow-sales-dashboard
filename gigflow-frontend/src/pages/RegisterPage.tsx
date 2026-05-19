@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useAuth } from "@/hooks/useAuth"
+import { toast } from "sonner"
 import axios from "axios"
 import type { Role } from "@/types"
 
@@ -70,13 +71,14 @@ export default function RegisterPage() {
         data.password,
         data.role as Role
       )
+      toast.success("Account created successfully!")
       navigate("/dashboard")
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message ?? "Registration failed")
-      } else {
-        setError("Registration failed")
-      }
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message ?? "Registration failed"
+        : "Registration failed"
+      setError(message)
+      toast.error(message)
     }
   }
 

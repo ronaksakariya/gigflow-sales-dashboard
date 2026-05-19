@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
+import { toast } from "sonner"
 import axios from "axios"
 
 const loginSchema = z.object({
@@ -48,13 +49,14 @@ export default function LoginPage() {
     setError(null)
     try {
       await login(data.email, data.password)
+      toast.success("Welcome back!")
       navigate("/dashboard")
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message ?? "Login failed")
-      } else {
-        setError("Login failed")
-      }
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message ?? "Login failed"
+        : "Login failed"
+      setError(message)
+      toast.error(message)
     }
   }
 

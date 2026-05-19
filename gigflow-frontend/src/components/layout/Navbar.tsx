@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Zap, LogOut, Sun, Moon } from 'lucide-react'
+import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme } from '@/components/theme-provider'
 import { Button } from '@/components/ui/button'
@@ -19,6 +20,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout()
+    toast.success('Logged out successfully')
     navigate('/login')
   }
 

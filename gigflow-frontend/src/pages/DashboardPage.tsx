@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Plus } from "lucide-react"
+import { toast } from "sonner"
 import { useAuth } from "@/hooks/useAuth"
 import { useLeads } from "@/hooks/useLeads"
 import { deleteLead, exportLeads } from "@/api/leads.api"
@@ -44,8 +45,14 @@ export default function DashboardPage() {
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this lead?")) {
-      await deleteLead(id)
-      refetch()
+      try {
+        await deleteLead(id)
+        toast.success("Lead deleted successfully")
+        refetch()
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Failed to delete lead"
+        toast.error(message)
+      }
     }
   }
 
@@ -64,13 +71,23 @@ export default function DashboardPage() {
     setEditingLead(null)
   }
 
-  const handleExport = () => {
-    exportLeads({
-      status: filters.status,
-      source: filters.source,
-      search: filters.search,
-      sort: filters.sort,
-    })
+  const handleExport = async () => {
+    try {
+      await exportLeads({
+        status: filters.status,
+        source: filters.source,
+        search: filters.search,
+        sort: filters.sort,
+      })
+      toast.success("Leads exported successfully")
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to export leads"
+      toast.error(message)
+    }
+  }
+
+  const handleClearFilters = () => {
+    setFilters({ status: '', source: '', search: '', sort: 'latest', page: 1 })
   }
 
   return (
@@ -105,6 +122,7 @@ export default function DashboardPage() {
             filters={filters}
             onChange={setFilters}
             onExport={handleExport}
+            onClear={handleClearFilters}
           />
         </div>
 

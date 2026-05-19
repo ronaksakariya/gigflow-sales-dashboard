@@ -1,0 +1,70 @@
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import type { ReactNode } from 'react'
+import type { User, Role } from '@/types'
+import * as authApi from '@/api/auth.api'
+
+interface AuthContextValue {
+  user: User | null
+  isLoading: boolean
+  isAuthenticated: boolean
+  login: (email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string, role?: Role) => Promise<void>
+  logout: () => Promise<void>
+}
+
+const AuthContext = createContext<AuthContextValue | null>(null)
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    authApi
+      .getMe()
+      .then((res) => {
+        if (res.data) setUser(res.data)
+      })
+      .catch(() => {
+        setUser(null)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [])
+
+  const login = useCallback(async (email: string, password: string) => {
+    const res = await authApi.login({ email, password })
+    if (res.data) setUser(res.data)
+  }, [])
+
+  const register = useCallback(
+    async (name: string, email: string, password: string, role?: Role) => {
+      const res = await authApi.register({ name, email, password, role })
+      if (res.data) setUser(res.data)
+    },
+    [],
+  )
+
+  const logout = useCallback(async () => {
+    await authApi.logout()
+    setUser(null)
+  }, [])
+
+  const isAuthenticated = user !== null
+
+  return (
+    <AuthContext.Provider
+      value={{ user, isLoading, isAuthenticated, login, register, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth(): AuthContextValue {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
+}

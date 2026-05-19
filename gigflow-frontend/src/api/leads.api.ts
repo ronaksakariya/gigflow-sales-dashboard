@@ -61,15 +61,26 @@ export async function deleteLead(id: string): Promise<ApiResponse<null>> {
   return response.data
 }
 
-export function exportLeads(
+export async function exportLeads(
   filters: Omit<LeadFilters, 'page' | 'limit'>,
-): void {
+): Promise<void> {
   const params = new URLSearchParams()
   if (filters.status) params.set('status', filters.status)
   if (filters.source) params.set('source', filters.source)
   if (filters.search) params.set('search', filters.search)
   if (filters.sort) params.set('sort', filters.sort)
 
-  const url = `${import.meta.env.VITE_API_URL}/leads/export?${params.toString()}`
-  window.open(url, '_blank')
+  const response = await axiosInstance.get('/leads/export?' + params.toString(), {
+    responseType: 'blob',
+  })
+
+  const blob = new Blob([response.data], { type: 'text/csv' })
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'gigflow-leads.csv'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(url)
 }

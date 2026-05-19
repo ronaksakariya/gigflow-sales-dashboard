@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Search, Download } from 'lucide-react'
+import { Search, Download, X } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -16,19 +16,33 @@ interface LeadFiltersProps {
   filters: LeadFilters
   onChange: (partial: Partial<LeadFilters>) => void
   onExport: () => void
+  onClear: () => void
 }
 
 export default function LeadFilters({
   filters,
   onChange,
   onExport,
+  onClear,
 }: LeadFiltersProps) {
   const [localSearch, setLocalSearch] = useState(filters.search ?? '')
   const debouncedSearch = useDebounce(localSearch, 400)
 
+  const hasActiveFilters = !!(
+    filters.status ||
+    filters.source ||
+    filters.search ||
+    filters.sort !== 'latest'
+  )
+
   useEffect(() => {
     onChange({ search: debouncedSearch })
   }, [debouncedSearch])
+
+  const handleClear = () => {
+    setLocalSearch('')
+    onClear()
+  }
 
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3 shadow-sm">
@@ -89,6 +103,12 @@ export default function LeadFilters({
             <SelectItem value="oldest">Oldest First</SelectItem>
           </SelectContent>
         </Select>
+        {hasActiveFilters && (
+          <Button variant="ghost" size="sm" onClick={handleClear} className="h-9 gap-1.5 text-muted-foreground hover:text-foreground">
+            <X className="size-3.5" />
+            Clear
+          </Button>
+        )}
         <Button variant="outline" size="sm" onClick={onExport} className="h-9 gap-1.5">
           <Download className="size-3.5" />
           Export

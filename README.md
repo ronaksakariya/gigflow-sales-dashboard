@@ -106,14 +106,34 @@ gigflow-smart-leads/
 
 ### Docker
 
+Pull from Docker Hub
+
 ```bash
-# From project root
-cp .env.example .env
-# Edit .env with your JWT_SECRET
-docker compose up --build
+docker pull ronaksakariya/gigflow-backend
+docker pull ronaksakariya/gigflow-frontend
 ```
 
-The app will be available at [http://localhost](http://localhost) (port 80). Nginx proxies `/api` requests to the backend.
+Run with Docker Compose
+
+```bash
+# Clone the repository
+git clone https://github.com/ronaksakariya/gigflow-sales-dashboard.git
+cd gigflow-smart-leads
+
+# Create .env file
+cp .env.example .env
+# Edit .env and set your JWT_SECRET
+docker compose up -d
+```
+
+Open [http://localhost](http://localhost) in your browser.
+
+### Docker Hub
+
+| Image | Link |
+|-------|------|
+| Backend | [ronaksakariya/gigflow-backend](https://hub.docker.com/r/ronaksakariya/gigflow-backend) |
+| Frontend | [ronaksakariya/gigflow-frontend](https://hub.docker.com/r/ronaksakariya/gigflow-frontend) |
 
 ## Environment Variables
 
@@ -136,10 +156,10 @@ The app will be available at [http://localhost](http://localhost) (port 80). Ngi
 
 ### Docker Compose (root `.env`)
 
-| Variable | Description |
-|---|---|
-| `MONGO_URI` | MongoDB connection (defaults to `mongodb://mongo:27017/gigflow` for Docker) |
-| `JWT_SECRET` | JWT signing secret (required) |
+| Variable | Description | Default |
+|---|---|---|
+| `MONGO_URI` | MongoDB connection string | `mongodb://mongo:27017/gigflow` |
+| `JWT_SECRET` | JWT signing secret (required) | — |
 
 ## Features
 

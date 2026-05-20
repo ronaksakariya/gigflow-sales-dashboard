@@ -40,12 +40,12 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-lg supports-backdrop-filter:backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center gap-2.5">
+        <Link to="/dashboard" className="flex items-center gap-2.5">
           <div className="flex items-center justify-center size-8 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 text-white shadow-md shadow-indigo-500/20">
             <Zap className="size-4" />
           </div>
           <span className="font-bold text-lg tracking-tight">GigFlow</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3">
           {user?.role === 'admin' && (
             <Button variant="ghost" size="sm" asChild className="hidden sm:flex gap-1.5">

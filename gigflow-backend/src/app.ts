@@ -14,6 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
 app.use('/api/users', userRoutes);

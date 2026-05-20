@@ -128,6 +128,20 @@ docker compose up -d
 
 Open [http://localhost](http://localhost) in your browser.
 
+### Creating an Admin User
+
+All new registrations default to the `sales` role. To promote a user to `admin`:
+
+1. Register a user through the app at [http://localhost](http://localhost)
+2. Run the following command to update their role:
+
+```bash
+docker compose exec mongo mongosh gigflow --eval \
+  'db.users.updateOne({email: "your-email@example.com"}, {$set: {role: "admin"}})'
+```
+
+3. Log out and log back in — the user will now have admin access (Users page, delete leads).
+
 ### Docker Hub
 
 | Image | Link |

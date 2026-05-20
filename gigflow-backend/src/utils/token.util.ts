@@ -13,7 +13,7 @@ export function generateToken(payload: JwtPayload): string {
 export function setTokenCookie(res: Response, token: string): void {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
     secure: NODE_ENV === 'production',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -22,7 +22,7 @@ export function setTokenCookie(res: Response, token: string): void {
 export function clearTokenCookie(res: Response): void {
   res.cookie(COOKIE_NAME, '', {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
     secure: NODE_ENV === 'production',
     expires: new Date(0),
   });
